@@ -1,4 +1,4 @@
-module github.com/NguyenTrungNghia1996/golang-fiber-postgres-template
+module golang-fiber-postgres-template
 
 go 1.24.4
 
