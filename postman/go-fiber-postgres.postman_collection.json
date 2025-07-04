@@ -60,9 +60,9 @@
           {"key": "Authorization", "value": "<token>"}
         ],
         "url": {
-          "raw": "{{baseUrl}}/me",
+          "raw": "{{baseUrl}}/api/me",
           "host": ["{{baseUrl}}"],
-          "path": ["me"]
+          "path": ["api", "me"]
         }
       }
     }

@@ -15,8 +15,8 @@ func Setup(app *fiber.App) {
 	app.Post("/users", controllers.CreateUser)
 	app.Post("/login", controllers.Login)
 
-	// Example protected route
-	app.Get("/me", middleware.Protected(), func(c *fiber.Ctx) error {
+	api := app.Group("/api", middleware.Protected())
+	api.Get("/me", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "authorized"})
 	})
 }
