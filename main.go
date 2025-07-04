@@ -21,5 +21,6 @@ func main() {
 	// Register routes
 	routes.Setup(app)
 
-	log.Fatal(app.Listen(":3000"))
+	port := os.Getenv("PORT")
+	log.Fatal(app.Listen(":" + port))
 }
