@@ -21,10 +21,7 @@
       "request": {
         "method": "POST",
         "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
+          {"key": "Content-Type", "value": "application/json"}
         ],
         "body": {
           "mode": "raw",
@@ -42,10 +39,7 @@
       "request": {
         "method": "POST",
         "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
+          {"key": "Content-Type", "value": "application/json"}
         ],
         "body": {
           "mode": "raw",
@@ -55,6 +49,20 @@
           "raw": "{{baseUrl}}/login",
           "host": ["{{baseUrl}}"],
           "path": ["login"]
+        }
+      }
+    },
+    {
+      "name": "Get Me (protected)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "<token>"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["me"]
         }
       }
     }
