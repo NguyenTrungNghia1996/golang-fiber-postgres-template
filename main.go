@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-
+	"os"
 	"github.com/gofiber/fiber/v2"
 	"golang-fiber-postgres-template/config"
 	"golang-fiber-postgres-template/models"
