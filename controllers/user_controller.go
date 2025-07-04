@@ -15,32 +15,48 @@ import (
 func CreateUser(c *fiber.Ctx) error {
 	var u models.User
 	if err := c.BodyParser(&u); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 	hashed, err := utils.HashPassword(u.Password)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 	u.Password = hashed
 	if err := repositories.CreateUser(&u); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 	u.Password = ""
-	return c.JSON(u)
+	return c.Status(fiber.StatusCreated).JSON(models.APIResponse{
+		Status:  "success",
+		Message: "user created",
+		Data:    u,
+	})
 }
 
 // Login authenticates the user and returns a JWT token.
 func Login(c *fiber.Ctx) error {
 	var req models.User
 	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 	user, err := repositories.GetUserByUsername(req.Username)
-	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid credentials"})
-	}
-	if !utils.CheckPassword(req.Password, user.Password) {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid credentials"})
+	if err != nil || !utils.CheckPassword(req.Password, user.Password) {
+		return c.Status(fiber.StatusUnauthorized).JSON(models.APIResponse{
+			Status:  "error",
+			Message: "invalid credentials",
+		})
 	}
 	claims := jwt.MapClaims{
 		"user_id": user.ID,
@@ -53,7 +69,14 @@ func Login(c *fiber.Ctx) error {
 	}
 	t, err := token.SignedString([]byte(secret))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
-	return c.JSON(fiber.Map{"token": t})
+	return c.JSON(models.APIResponse{
+		Status:  "success",
+		Message: "login successful",
+		Data:    fiber.Map{"token": t},
+	})
 }
